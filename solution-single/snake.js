@@ -47,7 +47,8 @@ class Pellet {
 /** Snake */
 
 class Snake {
-    constructor(keymap, start, dir) {
+    constructor(color, keymap, start, dir) {
+	this.color = color      // color for this snake
 	this.keymap = keymap    // mapping of keys to directions
 	this.parts = [start]    // list of x-y coordinates of parts
 	this.dir = dir          // dir to move on next move
@@ -55,7 +56,7 @@ class Snake {
     }
 
     draw() {
-	for (const p of this.parts) p.draw("orange")
+	for (const p of this.parts) p.draw(this.color)
     }
 
     contains(pt) {
@@ -63,7 +64,9 @@ class Snake {
     }
 
     crashIntoSelf() {
-	// TODO
+	const head = this.head()
+	const body = this.parts.slice(1)
+	return body.some(b => b.x === head.x && b.y === head.y)
     }
 
     crashIntoWall() {
@@ -90,7 +93,10 @@ class Snake {
     }
 
     changeDir(dir) {
-	this.dir = dir
+	if (dir === "left" && this.dir !== "right") this.dir = "left"
+	else if (dir === "right" && this.dir !== "left") this.dir = "right"
+	else if (dir === "up" && this.dir !== "down") this.dir = "up"
+	else if (dir === "down" && this.dir !== "up") this.dir = "down"
     }
 
     grow() {
@@ -117,12 +123,13 @@ class Game {
 	this.numFood = 3
 
 	this.interval = null
-	this.keyListener = this.onkey; //.bind(this)
+	this.keyListener = this.onkey.bind(this)
     }
 
     refillFood() {
 	while (this.food.length < this.numFood) {
-	    this.food.push(Pellet.newRandom())
+	    const candidate = Pellet.newRandom()
+	    if (!this.snake.contains(candidate)) this.food.push(candidate)
 	}
     }
 
@@ -168,6 +175,7 @@ class Game {
 
 
 const snake = new Snake(
+	"red", 
 	{ArrowLeft: "left", ArrowRight: "right", ArrowUp: "up", ArrowDown: "down"},
 	new Point(20, 20),
 	"right")
