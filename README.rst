@@ -43,6 +43,7 @@ Read over the source code. There's a lot happeneing here!
 
 Add comments and notes to understand the source better.
 
+
 Step Three: Fix the Keyboard Bug
 ================================
 
