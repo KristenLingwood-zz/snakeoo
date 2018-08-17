@@ -11,7 +11,9 @@ canvas.setAttribute("width", WIDTH * SCALE)
 const ctx = canvas.getContext("2d")
 
 
-/** Point: */
+/** Point: 
+ * defines coordinates on gameboard. Could be for either snake or food. 
+*/
 
 class Point {
     constructor(x, y) {
@@ -67,15 +69,18 @@ class Snake {
         for (const p of this.parts) p.draw("orange")
     }
 
-    contains(pt) {
-        return this.parts.some(me => me.x === pt.x && me.y === pt.y)
+    contains(pt, arr = this.parts) {
+        return arr.some(me => me.x === pt.x && me.y === pt.y)
     }
 
     crashIntoSelf() {
-        // TODO
+        const headless = this.parts.slice(1)
+        return (this.contains(this.head(), headless))
     }
 
     crashIntoWall() {
+        console.log(this.parts[0])
+        // console.log(isOutOfBound)
         return (this.head().isOutOfBound())
     }
 
@@ -83,8 +88,9 @@ class Snake {
         return this.parts[0]
     }
 
+    //a move adds a new head(first circle) and removes the tail(last circle)
     move() {
-        const {x, y} = this.head()
+        const { x, y } = this.head()
         let pt
         if (this.dir === "left") pt = new Point(x - 1, y)
         if (this.dir === "right") pt = new Point(x + 1, y)
@@ -93,7 +99,9 @@ class Snake {
         this.parts.unshift(pt)
     }
 
+    //snake handles its own moving by calling the game's key handler
     handleKey(key) {
+        console.log("this.snake inside of handlekey", this.snake)
         if (this.keymap[key] !== undefined) this.changeDir(this.keymap[key])
     }
 
@@ -107,7 +115,7 @@ class Snake {
 
     truncate() {
         if (this.growBy === 0) this.parts.pop()
-        else this.growBy-- 
+        else this.growBy--
     }
 
     eats(food) {
@@ -120,12 +128,14 @@ class Snake {
 
 class Game {
     constructor(snakes) {
-        this.snake = snake
+        this.snake = snakes
         this.food = []
         this.numFood = 3
 
         this.interval = null
-        this.keyListener = this.onkey
+        //binds instance of game to the key listener so that when onkey is called "this" references the instance of game, and not window. 
+        this.keyListener = this.onkey.bind(this)
+
     }
 
     refillFood() {
@@ -139,8 +149,10 @@ class Game {
         this.interval = window.setInterval(this.tick.bind(this), SPEED)
     }
 
+    //calls the snake's key handler
     onkey(e) {
         this.snake.handleKey(e.key)
+        console.log("this.snake", this.snake)
     }
 
     removeFood(pellet) {
@@ -176,7 +188,7 @@ class Game {
 
 
 const snake = new Snake(
-    {ArrowLeft: "left", ArrowRight: "right", ArrowUp: "up", ArrowDown: "down"},
+    { ArrowLeft: "left", ArrowRight: "right", ArrowUp: "up", ArrowDown: "down" },
     new Point(20, 20),
     "right")
 
