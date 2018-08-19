@@ -201,6 +201,7 @@ class Game {
             }
             this.refillFood();
         } else {
+            alert('GAME OVER')
             window.clearInterval(this.interval);
             window.removeEventListener('keydown', this.keyListener);
         }

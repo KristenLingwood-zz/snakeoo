@@ -1,0 +1,16 @@
+body {
+  background-color: silver;
+  display: flex;
+  flex-direction: column;
+  align-items: center
+}
+
+#board {
+  border: solid 25px #003407;
+  background-color: #b1b1b1;
+}
+
+#title {
+  color: #003407;
+  text-align: center
+}
