@@ -42,7 +42,6 @@ class Point {
 class Pellet {
     constructor(x, y) {
         this.pt = new Point(x, y);
-        //console.log(this.pt)
 
     }
 
@@ -57,7 +56,6 @@ class Pellet {
 }
 
 /** Snake */
-
 class Snake {
     constructor(keymap, start, dir, color = "orange") {
         this.keymap = keymap; // mapping of keys to directions
@@ -108,7 +106,6 @@ class Snake {
 
     //snake handles its own moving by calling the game's key handler
     handleKey(key) {
-        //console.log('this.snake inside of handlekey', this.snake);
         if (this.keymap[key] !== undefined) this.changeDir(this.keymap[key]);
     }
 
