@@ -217,5 +217,5 @@ const snake2 = new Snake(
     'right', 'pink'
 );
 
-const game = new Game([snake1, snake2]);
+const game = new Game([snake1]);
 game.play();
